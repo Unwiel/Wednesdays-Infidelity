@@ -15,6 +15,9 @@
 	<!-- ____________________________ Window Settings ___________________________ -->
 
 	<window width="1280" height="720" fps="" background="#000000" hardware="true" vsync="false" />
+	
+	<!--Mobile-specific-->
+	<window if="mobile" orientation="landscape" fullscreen="true" width="1280" height="720" resizable="false" allow-shaders="true" require-shaders="true" />
 
 	<window orientation="landscape" fullscreen="false" resizable="true" vsync="false"/>
 
@@ -37,7 +40,9 @@
 
 	<classpath name="source" />
 	
-	<define name="VIDEOS_ALLOWED" if="web || windows" unless="32bits"/>
+	<assets path="assets/android" if="android" /> <!-- to not have the android assets in another builds -saw -->
+	
+	<define name="VIDEOS_ALLOWED" if="web || android" unless="32bits"/>
 
 	<assets path="assets/preload" rename="assets" exclude="*.ogg" if="web"/>
 	<assets path="assets/preload" rename="assets" exclude="*.mp3"  unless="web"/>
@@ -91,9 +96,19 @@
 	<!--Disable the Flixel core debugger. Automatically gets set whenever you compile in release mode!-->
 	<haxedef name="FLX_NO_DEBUG" unless="debug" />
 
-	<error value="Targets besides desktop are not supported" unless="desktop" />
-
 	<haxedef name="no-deprecation-warnings" />
+	
+	<!--Make's-the-Game-use-less-ram-->
+	<haxedef name="HXCPP_GC_BIG_BLOCKS" />
+
+	<!--Always-enable-Null-Object-Reference-check-->
+	<haxedef name="HXCPP_CHECK_POINTER" if="release" />
+	<haxedef name="HXCPP_STACK_LINE" if="release" />
+
+	<!--Android-Internet-Connection-->
+	<config:android permission="android.permission.ACCESS_NETWORK_STATE" />
+	<config:android permission="android.permission.ACCESS_WIFI_STATE" />
+	<config:android permission="android.permission.INTERNET" />
 
 	<!-- _________________________________ Custom _______________________________ -->
 
