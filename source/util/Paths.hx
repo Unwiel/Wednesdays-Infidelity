@@ -315,6 +315,7 @@ class Paths
 
 	public static function returnSound(path:String, key:String, ?library:String)
 	{
+	   #if desktop 
 		var file = null;
 		if (FileSystem.exists(file))
 		{
@@ -325,6 +326,7 @@ class Paths
 			localTrackedAssets.push(key);
 			return currentTrackedSounds.get(file);
 		}
+		#end
 
 		// I hate this so god damn much
 		var gottenPath:String = getPath('$path/$key.$SOUND_EXT', SOUND, library);

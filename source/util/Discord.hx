@@ -1,13 +1,16 @@
 package util;
 
+#if desktop 
 import Sys.sleep;
 import discord_rpc.DiscordRpc;
 import states.menus.MainMenuState;
+#end
 
 using StringTools;
 
 class DiscordClient
 {
+    #if desktop 
 	public static var isInitialized:Bool = false;
 
 	public function new()
@@ -98,5 +101,6 @@ class DiscordClient
 				changePresence(details, state, smallImageKey, hasStartTimestamp, endTimestamp);
 			});
 	}
+	#end
 	#end
 }
