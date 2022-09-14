@@ -185,39 +185,29 @@ class Paths
 
 	static public function video(key:String)
 	{
-		return 'assets/videos/$key.$VIDEO_EXT';
+		return SUtil.getPath + 'assets/videos/$key.$VIDEO_EXT';
 	}
 
-	static public function sound(key:String, ?library:String):Sound
+    static public function sound(key:String, ?library:String):Dynamic
 	{
-		var sound:Sound = returnSound('sounds', key, library);
-		return sound;
+		return getPath('sounds/$key.$SOUND_EXT', SOUND, library);
 	}
-
-	inline static public function soundRandom(key:String, min:Int, max:Int, ?library:String)
+	
+	inline static public function music(key:String, ?library:String):Dynamic
 	{
-		return sound(key + FlxG.random.int(min, max), library);
-	}
-
-	inline static public function music(key:String, ?library:String):Sound
-	{
-		var file:Sound = returnSound('music', key, library);
-		return file;
+		return getPath('music/$key.$SOUND_EXT', MUSIC, library);
 	}
 
 	inline static public function voices(song:String):Any
 	{
-		var songKey:String = '${song.toLowerCase().replace(' ', '-')}/Voices';
-		var voices = returnSound('songs', songKey);
-		return voices;
+		return 'songs:assets/songs/${song.toLowerCase().replace(' ', '-')}/Voices.$SOUND_EXT';
 	}
 
 	inline static public function inst(song:String):Any
 	{
-		var songKey:String = '${song.toLowerCase().replace(' ', '-')}/Inst';
-		var inst = returnSound('songs', songKey);
-		return inst;
+		return 'songs:assets/songs/${song.toLowerCase().replace(' ', '-')}/Inst.$SOUND_EXT';
 	}
+
 
 	inline static public function image(key:String, ?library:String):FlxGraphic
 	{
@@ -310,36 +300,7 @@ class Paths
 		trace('oh no its returning null NOOOO $path', currentLevel); // MORE INFO CAUSE IDK WHATS WRONG OTHER WISE
 		return null;
 	}
-
-	public static var currentTrackedSounds:Map<String, Sound> = [];
-
-	public static function returnSound(path:String, key:String, ?library:String)
-	{
-	   #if desktop 
-		var file = null;
-		if (FileSystem.exists(file))
-		{
-			if (!currentTrackedSounds.exists(file))
-			{
-				currentTrackedSounds.set(file, Sound.fromFile(file));
-			}
-			localTrackedAssets.push(key);
-			return currentTrackedSounds.get(file);
-		}
-		#end
-
-		// I hate this so god damn much
-		var gottenPath:String = getPath('$path/$key.$SOUND_EXT', SOUND, library);
-		gottenPath = gottenPath.substring(gottenPath.indexOf(':') + 1, gottenPath.length);
-		// trace(gottenPath);
-		if (!currentTrackedSounds.exists(gottenPath))
-			currentTrackedSounds.set(gottenPath, Sound.fromFile('./' + gottenPath));
-		// #else
-		// currentTrackedSounds.set(gottenPath, OpenFlAssets.getSound(getPath('$path/$key.$SOUND_EXT', SOUND, library)));
-		// #end
-		localTrackedAssets.push(key);
-		return currentTrackedSounds.get(gottenPath);
-	}
+	
 
 	inline static public function getAtlasFromData(key:String, data:DataType)
 	{
