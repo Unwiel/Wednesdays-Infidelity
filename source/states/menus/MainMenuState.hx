@@ -279,7 +279,7 @@ class MainMenuState extends MusicBeatState
                 #if android
         addVirtualPad(UP_DOWN, A_B);
         addPadCamera();
-        #end#
+        #end
 	}
 
 	var selectedSomethin:Bool = false;
