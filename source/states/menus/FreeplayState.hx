@@ -257,7 +257,7 @@ class FreeplayState extends MusicBeatState
 		daStatic.animation.play('static');
 		
 		#if android
-        addVirtualPad(LEFT_FULL, A_B_X_Y); 
+        addVirtualPad(LEFT_FULL, A_B_C); 
         #end
 
 		super.create();
@@ -377,8 +377,8 @@ class FreeplayState extends MusicBeatState
 			var upP = controls.UI_UP_P;
 			var downP = controls.UI_DOWN_P;
 			var accepted = controls.ACCEPT;
-			var space = FlxG.keys.justPressed.SPACE || virtualPad.buttonX.justPressed;
-			var ctrl = FlxG.keys.justPressed.CONTROL || virtualPad.buttonY.justPressed;
+			var space = FlxG.keys.justPressed.SPACE || virtualPad.buttonC.justPressed;
+			var ctrl = FlxG.keys.justPressed.CONTROL;
 
 			var shiftMult:Int = 1;
 			if (FlxG.keys.pressed.SHIFT)
