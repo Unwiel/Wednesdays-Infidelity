@@ -63,15 +63,15 @@ class FlxVideo extends FlxBasic
 		});
 		netStream.play(name);
 		#elseif desktop
-		var video:MP4Handler = new MP4Handler(focus);
+		var video:MP4Handler = new MP4Handler();
 		video.playVideo(name);
 		video.finishCallback = onVLCComplete;
 		video.onError = onVLCError;
-		video.skipable = skipable;
+		video.canSkip = skipable;
 		#end
 	}
 
-	#if desktop
+	#if android 
 	function checkFile(fileName:String):String
 	{
 		var pDir = "";
