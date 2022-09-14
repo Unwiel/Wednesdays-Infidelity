@@ -88,25 +88,7 @@ class Main extends Sprite
 		if (FlxG.keys == null)
 			return;
 
-		if (canToggleFullScreen && fullscreenKeys != null)
-		{
-			var lastPressed:FlxKey = FlxG.keys.firstJustPressed();
-
-			if (!fullscreenKeys.contains(lastPressed))
-				return;
-
-			for (key in fullscreenKeys)
-			{
-				if (key == null || key == FlxKey.NONE)
-					continue;
-
-				if (key == lastPressed)
-				{
-					FlxG.fullscreen = !FlxG.fullscreen;
-					break;
-				}
-			}
-		}
+		
 	}
 
 	private function setupGame():Void
