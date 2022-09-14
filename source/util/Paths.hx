@@ -82,18 +82,7 @@ class Paths
 		}
 
 		// clear all sounds that are cached
-		for (key in currentTrackedSounds.keys())
-		{
-			if (!localTrackedAssets.contains(key) && !dumpExclusions.contains(key) && key != null)
-			{
-				// trace('test: ' + dumpExclusions, key);
-				Assets.cache.clear(key);
-				currentTrackedSounds.remove(key);
-			}
-		}
-		// flags everything to be cleared out next unused memory clear
-		localTrackedAssets = [];
-		openfl.Assets.cache.clear("songs");
+		
 	}
 
 	static public var currentModDirectory:String = '';
@@ -191,6 +180,11 @@ class Paths
     static public function sound(key:String, ?library:String):Dynamic
 	{
 		return getPath('sounds/$key.$SOUND_EXT', SOUND, library);
+	}
+	
+	inline static public function soundRandom(key:String, min:Int, max:Int, ?library:String)
+	{
+		return sound(key + FlxG.random.int(min, max), library);
 	}
 	
 	inline static public function music(key:String, ?library:String):Dynamic
