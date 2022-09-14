@@ -2520,24 +2520,15 @@ class PlayState extends MusicBeatState
 		{
 			if (isStoryMode)
 				diablo();
-				#if android
-				Hardware.vibrate(250);
-				#end
 			else
 			{
 				switch (PlayState.SONG.stage)
 				{
 					case "susNightmare" | "fence":
 						diablo();
-						#if android
-				        Hardware.vibrate(250);
-				        #end
 					default:
 						if (curSong == 'Hellhole')
 							diablo();
-							#if android
-				            Hardware.vibrate(250);
-				            #end
 						else
 						{
 							persistentUpdate = false;
@@ -4438,6 +4429,9 @@ class PlayState extends MusicBeatState
 		{
 			devil.alpha = 0.0001;
 		}
+		#if android
+	    Hardware.vibrate(250);
+	    #end
 	}
 
 	function jump()
