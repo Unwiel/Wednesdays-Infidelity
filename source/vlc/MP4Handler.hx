@@ -1,4 +1,4 @@
-package;
+package vlc;
 
 #if android
 import android.net.Uri;
