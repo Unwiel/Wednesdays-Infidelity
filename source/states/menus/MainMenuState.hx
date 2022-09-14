@@ -315,10 +315,6 @@ class MainMenuState extends MusicBeatState
 				{
 					CoolUtil.browserLoad('https://discord.gg/KYGJvPkN8C');
 				}
-				else if (!Progression.beatMainWeek && optionShit[curSelected] == 'freeplay')
-				{
-					FlxG.sound.play(Paths.sound('lockedSound'));
-				}
 				else
 				{
 					selectedSomethin = true;
