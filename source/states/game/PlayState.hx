@@ -3,6 +3,9 @@ package states.game;
 import data.*;
 import data.ClientPrefs;
 import data.Highscore;
+#if android
+import android.Hardware;
+#end
 import data.Section.SwagSection;
 import data.Song.SwagSong;
 import data.StageData;
@@ -1242,6 +1245,10 @@ class PlayState extends MusicBeatState
 		weekMissesTxt.cameras = [camHUD];
 		botplayTxt.cameras = [camHUD];
 		cutsceneText.cameras = [camOther];
+		
+		#if android
+        addAndroidControls();
+        #end
 
 		// if (SONG.song == 'South')
 		// FlxG.camera.alpha = 0.7;
@@ -1497,7 +1504,11 @@ class PlayState extends MusicBeatState
 		{
 			return;
 		}
-
+		
+		#if android
+        androidControls.visible = true;
+        #end
+ 
 		inCutscene = false;
 
 		if (skipCountdown || startOnTime > 0)
@@ -1576,7 +1587,7 @@ class PlayState extends MusicBeatState
 			switch (curStage)
 			{
 				case 'vecindario' | 'bobux' | 'reefer' | 'inferno' | 'toyland' | 'chedder' | 'vecindariocover' | 'hell' | 'fence' | 'jankacStage': // make sure to also add the stage name here too
-					grain.alpha = 1;
+					//grain.alpha = 1;
 					grain.animation.play('idle');
 				case 'stageLeakers':
 					if (curBeat % 2 == 0)
@@ -1603,14 +1614,14 @@ class PlayState extends MusicBeatState
 					{
 						smallDemons.animation.play('idle', true);
 					}
-					grain.alpha = 1;
+					//grain.alpha = 1;
 					grain.animation.play('idle');
 				case 'susNightmare':
 					if (curBeat % 1 == 0)
 					{
 						gfSus.animation.play("dance", true);
 					}
-					grain.alpha = 1;
+					//grain.alpha = 1;
 					grain.animation.play('idle');
 			}
 
@@ -2505,19 +2516,28 @@ class PlayState extends MusicBeatState
 		}
 		#end
 
-		if (controls.PAUSE && canPause && startedCountdown && !inCutscene)
+		if (controls.PAUSE #if android || FlxG.android.justReleased.BACK #end && canPause && startedCountdown && !inCutscene)
 		{
 			if (isStoryMode)
 				diablo();
+				#if android
+				Hardware.vibrate(250);
+				#end
 			else
 			{
 				switch (PlayState.SONG.stage)
 				{
 					case "susNightmare" | "fence":
 						diablo();
+						#if android
+				        Hardware.vibrate(250);
+				        #end
 					default:
 						if (curSong == 'Hellhole')
 							diablo();
+							#if android
+				            Hardware.vibrate(250);
+				            #end
 						else
 						{
 							persistentUpdate = false;
@@ -3555,6 +3575,10 @@ class PlayState extends MusicBeatState
 				return;
 			}
 		}
+		
+		#if android
+        androidControls.visible = false;
+        #end
 
 		timeBarBG.visible = false;
 		timeBar.visible = false;
@@ -5150,7 +5174,7 @@ class PlayState extends MusicBeatState
 						}
 					}
 				}
-				grain.alpha = 1;
+				//grain.alpha = 1;
 				grain.animation.play('idle');
 
 				if (curBeat % 1 == 0)
@@ -5175,7 +5199,7 @@ class PlayState extends MusicBeatState
 					danceLeft = !danceLeft;
 				}
 			case 'hell':
-				grain.alpha = 1;
+				//grain.alpha = 1;
 				grain.animation.play('idle');
 				if (curBeat % 1 == 0)
 					basedSkeletons.animation.play('idle', true);
@@ -5362,7 +5386,7 @@ class PlayState extends MusicBeatState
 
 	function fadeIn(speed:Float = 1)
 	{
-		grain.alpha = 1;
+		//grain.alpha = 1;
 		grain.animation.play('idle');
 
 		var black:FlxSprite = new FlxSprite().makeGraphic(FlxG.width * 3, FlxG.height * 3, FlxColor.BLACK);
