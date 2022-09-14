@@ -1,100 +1,105 @@
-package vlc;
+package;
 
+#if android
+import android.net.Uri;
+#end
 import flixel.FlxG;
 import openfl.events.Event;
-import vlc.bitmap.VlcBitmap;
+import lime.app.Application;
+import vlc.VLCBitmap;
 
 /**
- * Play a video using cpp.
- * Use bitmap to connect to a graphic or use `MP4Sprite`.
+ * Handles video playback.
+ * Use bitmap to connect to a graphic or use `VideoSprite`.
  */
-class MP4Handler extends VlcBitmap
+class VideoHandler extends VLCBitmap
 {
-	public var readyCallback:Void->Void;
-	public var finishCallback:Void->Void;
+	public var isPlaying:Bool = false;
+	public var canSkip:Bool = true;
+	public var canUseSound:Bool = true;
+	public var canUseAutoResize:Bool = true;
+	public var readyCallback:Void->Void = null;
+	public var finishCallback:Void->Void = null;
 
-	public var skipable:Bool = false;
-	public var focus:Bool = true;
+	private var pauseMusic:Bool = false;
 
-	var pauseMusic:Bool;
-
-	public function new(daFocus:Null<Bool> = true, width:Float = 320, height:Float = 240, autoScale:Bool = true)
+	public function new()
 	{
-		super(width, height, autoScale);
+		super();
 
-		onVideoReady = onVLCVideoReady;
-		onComplete = finishVideo;
+		onReady = onVLCReady;
+		onComplete = onVLCComplete;
 		onError = onVLCError;
 
 		FlxG.addChildBelowMouse(this);
-
-		FlxG.stage.addEventListener(Event.ENTER_FRAME, update);
-
-		if (daFocus != null)
-			focus = daFocus;
-
-		FlxG.signals.focusGained.add(function()
-		{
-			if (focus)
-				resume();
-		});
-		FlxG.signals.focusLost.add(function()
-		{
-			if (focus)
-				pause();
-		});
 	}
 
-	function update(e:Event)
+	private function update(?E:Event):Void
 	{
-		if (skipable && ((FlxG.keys.justPressed.ENTER || FlxG.keys.justPressed.SPACE) && isPlaying))
-			finishVideo();
+		isPlaying = libvlc.isPlaying();
+		if (canSkip
+			&& ((FlxG.keys.justPressed.ENTER && !FlxG.keys.pressed.ALT)
+				|| FlxG.keys.justPressed.SPACE #if android || FlxG.android.justReleased.BACK #end)
+			&& initComplete)
+			onVLCComplete();
 
 		if (FlxG.sound.muted || FlxG.sound.volume <= 0)
 			volume = 0;
-		else
-			volume = FlxG.sound.volume + 0.4;
+		else if (canUseSound)
+			volume = FlxG.sound.volume;
 	}
 
-	#if sys
-	function checkFile(fileName:String):String
+	private function resize(?E:Event):Void
 	{
-		#if !android
-		var pDir = "";
-		var appDir = "file:///" + Sys.getCwd() + "/";
+		if (canUseAutoResize)
+		{
+			set_width(calcSize(0));
+			set_height(calcSize(1));
+		}
+	}
 
-		if (fileName.indexOf(":") == -1) // Not a path
-			pDir = appDir;
-		else if (fileName.indexOf("file://") == -1 || fileName.indexOf("http") == -1) // C:, D: etc? ..missing "file:///" ?
-			pDir = "file:///";
-
-		return pDir + fileName;
-		#else
-		return "file://" + fileName;
+	private function createUrl(FileName:String):String
+	{
+		#if android
+		return Uri.fromFile(FileName);
+		#elseif linux
+		return 'file://' + Sys.getCwd() + FileName;
+		#elseif (windows || mac)
+		return 'file:///' + Sys.getCwd() + FileName;
 		#end
 	}
-	#end
 
-	function onVLCVideoReady()
+	private function onVLCReady():Void
 	{
-		trace("Video loaded!");
-
 		if (readyCallback != null)
 			readyCallback();
 	}
 
-	function onVLCError()
+	private function onVLCError(E:String):Void
 	{
-		// TODO: Catch the error
-		throw "VLC caught an error!";
+		Application.current.window.alert(E, "VLC caught an error");
+		onVLCComplete();
 	}
 
-	public function finishVideo()
+	private function onVLCComplete()
 	{
 		if (FlxG.sound.music != null && pauseMusic)
 			FlxG.sound.music.resume();
 
-		FlxG.stage.removeEventListener(Event.ENTER_FRAME, update);
+		if (FlxG.stage.hasEventListener(Event.ENTER_FRAME))
+			FlxG.stage.removeEventListener(Event.ENTER_FRAME, update);
+
+		if (FlxG.stage.hasEventListener(Event.RESIZE))
+			FlxG.stage.removeEventListener(Event.RESIZE, resize);
+
+		if (FlxG.autoPause)
+		{
+			if (FlxG.signals.focusGained.has(resume))
+				FlxG.signals.focusGained.remove(resume);
+
+			if (FlxG.signals.focusLost.has(pause))
+				FlxG.signals.focusLost.remove(pause);
+		}
 
 		dispose();
 
@@ -108,24 +113,52 @@ class MP4Handler extends VlcBitmap
 	}
 
 	/**
-	 * Native video support for Flixel & OpenFL
-	 * @param path Example: `your/video/here.mp4`
-	 * @param repeat Repeat the video.
-	 * @param pauseMusic Pause music until done video.
-	 */
-	public function playVideo(path:String, ?repeat:Bool = false, pauseMusic:Bool = false)
-	{
-		this.pauseMusic = pauseMusic;
+	 * Plays a video.
 
-		if (FlxG.sound.music != null && pauseMusic)
+	 * @param Path Example: `your/video/here.mp4`
+	 * @param Loop Loop the video.
+	 * @param Haccelerated if you want the video to be hardware accelerated.
+	 * @param PauseMusic Pause music until the video ends.
+	 */
+	public function playVideo(Path:String, Loop:Bool = false, hwAccelerated:Bool = true, PauseMusic:Bool = false):Void
+	{
+		pauseMusic = PauseMusic;
+
+		if (FlxG.sound.music != null && PauseMusic)
 			FlxG.sound.music.pause();
 
-		#if sys
-		play(checkFile(path));
+		resize();
+		playFile(createUrl(Path), Loop, hwAccelerated);
 
-		this.repeat = repeat ? -1 : 0;
-		#else
-		throw "Doesn't support sys";
-		#end
+		FlxG.stage.addEventListener(Event.ENTER_FRAME, update);
+		FlxG.stage.addEventListener(Event.RESIZE, resize);
+
+		if (FlxG.autoPause)
+		{
+			FlxG.signals.focusGained.add(resume);
+			FlxG.signals.focusLost.add(pause);
+		}
+	}
+
+	public function calcSize(Ind:Int):Float
+	{
+		var appliedWidth:Float = FlxG.stage.stageHeight * (FlxG.width / FlxG.height);
+		var appliedHeight:Float = FlxG.stage.stageWidth * (FlxG.height / FlxG.width);
+
+		if (appliedHeight > FlxG.stage.stageHeight)
+			appliedHeight = FlxG.stage.stageHeight;
+
+		if (appliedWidth > FlxG.stage.stageWidth)
+			appliedWidth = FlxG.stage.stageWidth;
+
+		switch (Ind)
+		{
+			case 0:
+				return appliedWidth;
+			case 1:
+				return appliedHeight;
+		}
+
+		return 0;
 	}
 }
