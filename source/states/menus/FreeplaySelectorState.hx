@@ -113,6 +113,11 @@ class FreeplaySelectorState extends MusicBeatState
 			FlxG.camera.shake(0.001, 99999999999);
 
 		changeItem();
+		
+		#if android
+        addVirtualPad(UP_DOWN, A_B);
+        addPadCamera();
+        #end
 
 		super.create();
 	}
