@@ -1,164 +1,71 @@
 package vlc;
 
-#if android
-import android.net.Uri;
-#end
+import flixel.text.FlxText;
+// import flixel.FlxState;
 import flixel.FlxG;
-import openfl.events.Event;
-import lime.app.Application;
-import vlc.VLCBitmap;
+// import flixel.FlxSubState;
+import flixel.FlxBasic;
 
-/**
- * Handles video playback.
- * Use bitmap to connect to a graphic or use `VideoSprite`.
- */
-class VideoHandler extends VLCBitmap
+import extension.webview.WebView;
+
+using StringTools;
+
+class MP4Handler extends FlxBasic
 {
-	public var isPlaying:Bool = false;
+	public static var androidPath:String = 'file:///android_asset/';
+
+	public static var source1:String = 'assets/videos/';
+
+	// public var nextState:FlxState;
+	
 	public var canSkip:Bool = true;
-	public var canUseSound:Bool = true;
-	public var canUseAutoResize:Bool = true;
-	public var readyCallback:Void->Void = null;
-	public var finishCallback:Void->Void = null;
 
-	private var pauseMusic:Bool = false;
+    public var finishCallback:Void->Void = null;
 
-	public function new()
+	public function new(source:String)
 	{
 		super();
 
-		onReady = onVLCReady;
-		onComplete = onVLCComplete;
-		onError = onVLCError;
+		// text = new FlxText(0, 0, 0, "Video Exited! Tap to Continue", 48);
+		// text.screenCenter();
+		// text.alpha = 0;
+		// add(text);
 
-		FlxG.addChildBelowMouse(this);
+		// will fix later -Daninnocent
+
+		// nextState = toTrans;
+
+		//FlxG.autoPause = false;
+
+		WebView.onClose=onClose;
+		WebView.onURLChanging=onURLChanging;
+
+		WebView.open(androidPath + source1 + source + '.html', false, null, ['http://exitme(.*)']);
 	}
 
-	private function update(?E:Event):Void
-	{
-		isPlaying = libvlc.isPlaying();
-		if (canSkip
-			&& ((FlxG.keys.justPressed.ENTER && !FlxG.keys.pressed.ALT)
-				|| FlxG.keys.justPressed.SPACE #if android || FlxG.android.justReleased.BACK #end)
-			&& initComplete)
-			onVLCComplete();
+	public override function update(dt:Float) {
+		for (touch in FlxG.touches.list)
+			if (touch.justReleased && canSkip)
+				if(finishCallback != null) finishCallback();
 
-		if (FlxG.sound.muted || FlxG.sound.volume <= 0)
-			volume = 0;
-		else if (canUseSound)
-			volume = FlxG.sound.volume;
+                if(FlxG.android.justReleased.BACK)
+                {
+                   if(finishCallback != null) finishCallback();
+                }
+
+		super.update(dt);	
 	}
 
-	private function resize(?E:Event):Void
-	{
-		if (canUseAutoResize)
+	function onClose(){// not working
+	 	trace('video closed lmao');
+		if (finishCallback != null)
 		{
-			set_width(calcSize(0));
-			set_height(calcSize(1));
+			finishCallback();
 		}
-	}
+	 }
 
-	private function createUrl(FileName:String):String
-	{
-		#if android
-		return Uri.fromFile(FileName);
-		#elseif linux
-		return 'file://' + Sys.getCwd() + FileName;
-		#elseif (windows || mac)
-		return 'file:///' + Sys.getCwd() + FileName;
-		#end
-	}
-
-	private function onVLCReady():Void
-	{
-		if (readyCallback != null)
-			readyCallback();
-	}
-
-	private function onVLCError(E:String):Void
-	{
-		Application.current.window.alert(E, "VLC caught an error");
-		onVLCComplete();
-	}
-
-	private function onVLCComplete()
-	{
-		if (FlxG.sound.music != null && pauseMusic)
-			FlxG.sound.music.resume();
-
-		if (FlxG.stage.hasEventListener(Event.ENTER_FRAME))
-			FlxG.stage.removeEventListener(Event.ENTER_FRAME, update);
-
-		if (FlxG.stage.hasEventListener(Event.RESIZE))
-			FlxG.stage.removeEventListener(Event.RESIZE, resize);
-
-		if (FlxG.autoPause)
-		{
-			if (FlxG.signals.focusGained.has(resume))
-				FlxG.signals.focusGained.remove(resume);
-
-			if (FlxG.signals.focusLost.has(pause))
-				FlxG.signals.focusLost.remove(pause);
-		}
-
-		dispose();
-
-		if (FlxG.game.contains(this))
-		{
-			FlxG.game.removeChild(this);
-
-			if (finishCallback != null)
-				finishCallback();
-		}
-	}
-
-	/**
-	 * Plays a video.
-
-	 * @param Path Example: `your/video/here.mp4`
-	 * @param Loop Loop the video.
-	 * @param Haccelerated if you want the video to be hardware accelerated.
-	 * @param PauseMusic Pause music until the video ends.
-	 */
-	public function playVideo(Path:String, Loop:Bool = false, hwAccelerated:Bool = true, PauseMusic:Bool = false):Void
-	{
-		pauseMusic = PauseMusic;
-
-		if (FlxG.sound.music != null && PauseMusic)
-			FlxG.sound.music.pause();
-
-		resize();
-		playFile(createUrl(Path), Loop, hwAccelerated);
-
-		FlxG.stage.addEventListener(Event.ENTER_FRAME, update);
-		FlxG.stage.addEventListener(Event.RESIZE, resize);
-
-		if (FlxG.autoPause)
-		{
-			FlxG.signals.focusGained.add(resume);
-			FlxG.signals.focusLost.add(pause);
-		}
-	}
-
-	public function calcSize(Ind:Int):Float
-	{
-		var appliedWidth:Float = FlxG.stage.stageHeight * (FlxG.width / FlxG.height);
-		var appliedHeight:Float = FlxG.stage.stageWidth * (FlxG.height / FlxG.width);
-
-		if (appliedHeight > FlxG.stage.stageHeight)
-			appliedHeight = FlxG.stage.stageHeight;
-
-		if (appliedWidth > FlxG.stage.stageWidth)
-			appliedWidth = FlxG.stage.stageWidth;
-
-		switch (Ind)
-		{
-			case 0:
-				return appliedWidth;
-			case 1:
-				return appliedHeight;
-		}
-
-		return 0;
+	function onURLChanging(url:String) {
+		if (url == 'http://exitme/') if(finishCallback != null) finishCallback(); // drity hack lol
+		trace("WebView is about to open: "+url);
 	}
 }
