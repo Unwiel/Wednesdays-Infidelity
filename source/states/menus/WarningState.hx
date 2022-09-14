@@ -49,7 +49,10 @@ class WarningState extends MusicBeatState
 
 	override function create()
 	{
-	   
+	        #if android
+		FlxG.android.preventDefaultKeys = [BACK];
+		#end
+
 		super.create();
 
 		if (ClientPrefs.doNotShowWarnings)
@@ -128,8 +131,6 @@ class WarningState extends MusicBeatState
 		var option:Option = new Option('Screen Shake', "", 'shake', 'bool', true);
 		addOption(option);
 
-		var option:Option = new Option('Shaders', "", 'shaders', 'bool', true);
-		addOption(option);
 
 
 		genOptions();
