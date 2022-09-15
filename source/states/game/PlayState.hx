@@ -5287,7 +5287,7 @@ class PlayState extends MusicBeatState
 	{
         var doPush:Bool = false;
 		var hxFile:String = 'data/' + Paths.formatToSongPath(SONG.song) + '/script.hx';
-	    hxFile = Paths.getPreloadPath(luaFile);
+	    hxFile = Paths.getPreloadPath(hxFile);
 		    if(OpenFlAssets.exists(hxFile)) {
 				doPush = true;
 			}
