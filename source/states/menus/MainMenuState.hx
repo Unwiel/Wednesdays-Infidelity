@@ -94,10 +94,7 @@ class MainMenuState extends MusicBeatState
 
 	override function create()
 	{
-                #if android
-        addVirtualPad(UP_DOWN, A_B);
-        addPadCamera();
-        #end
+                
 
 
 		keyCombos = [
@@ -279,6 +276,10 @@ class MainMenuState extends MusicBeatState
 		
 
 		changeItem();
+
+                #if android
+        addVirtualPad(UP_DOWN, A_B);
+        #end
 
 		super.create();
 
