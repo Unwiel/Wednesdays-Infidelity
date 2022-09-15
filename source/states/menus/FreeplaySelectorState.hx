@@ -114,13 +114,10 @@ class FreeplaySelectorState extends MusicBeatState
 
 		changeItem();
 		
-
-		super.create();
-
                 #if android
         addVirtualPad(UP_DOWN, A_B);
-        addPadCamera();
         #end
+                super.create();
 
 	}
 
