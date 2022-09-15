@@ -5368,7 +5368,7 @@ class PlayState extends MusicBeatState
 			
 			
 			if (doPush)
-			   hxFile = openfl.Assets.getBytes(path)
+			   hxFile = openfl.Assets.getBytes(path);
 			   script.runScript(hxFile1);
 		}
 		
