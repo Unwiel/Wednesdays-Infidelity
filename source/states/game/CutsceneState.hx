@@ -48,7 +48,7 @@ class CutsceneState extends MusicBeatState // PlayState is alreadly laggy enough
 	{
 		var video:String = null;
 		var skippable:Null<Bool> = null;
-		var focus:Null<Bool> = true;
+		//var focus:Null<Bool> = true;
 
 		if (endingCutscene)
 		{
@@ -88,17 +88,17 @@ class CutsceneState extends MusicBeatState // PlayState is alreadly laggy enough
 				case 'penk':
 					video = "PENKARU GRIDDY";
 					skippable = false;
-					focus = false;
+					//focus = false;
 				case 'cole':
 					video = "ongfr";
 					skippable = false;
-					focus = false;
+					//focus = false;
 			}
 		}
 
-		if (video != null && skippable != null && focus != null)
+		if (video != null && skippable != null)
 		{
-			playVideo(video, skippable, focus);
+			playVideo(video, skippable);
 		}
 		else
 		{
@@ -106,35 +106,18 @@ class CutsceneState extends MusicBeatState // PlayState is alreadly laggy enough
 		}
 	}
 
-	public function playVideo(videoName:String, ?skippable:Bool = false, ?focus:Bool = true)
+	public function playVideo(videoName:String, ?skippable:Bool = false)
 	{
-		#if VIDEOS_ALLOWED
-		var foundFile:Bool = false;
-		var fileName:String = Paths.video(videoName);
+		
 
-		if (FileSystem.exists(fileName))
-		{
-			foundFile = true;
-		}
-
-		if (foundFile)
-		{
-			var video = new FlxVideo(fileName, skippable, focus);
+			var video = new FlxVideo(fileName, skippable);
 
 			video.finishCallback = function()
 			{
 				finish();
 			}
 			return;
-		}
-		else
-		{
-			FlxG.log.warn('Couldnt find video file: ' + fileName);
-			finish();
-		}
-		#else
-		finish();
-		#end
+		
 	}
 
 	public function finish()
