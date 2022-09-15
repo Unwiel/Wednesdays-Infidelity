@@ -4187,7 +4187,7 @@ class PlayState extends MusicBeatState
 							}
 						}
 						else if (canMiss) 
-							noteMissPress(key); 
+							//noteMissPress(key); 
 
 						// I dunno what you need this for but here you go
 						//									- Shubs
