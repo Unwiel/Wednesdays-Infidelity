@@ -5381,7 +5381,7 @@ class PlayState extends MusicBeatState
 			doPush = true;
 		}
 		if(doPush) 
-			script.runScript(Paths.hscript("data/" + Paths.formatToSongPath(SONG.song) + "/" + "script")));
+			script.runScript(Paths.hscript("data/" + Paths.formatToSongPath(SONG.song) + "/" + "script"));
 
 		#end
 
