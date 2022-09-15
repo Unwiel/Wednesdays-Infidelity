@@ -5353,7 +5353,7 @@ class PlayState extends MusicBeatState
 		if(openfl.utils.Assets.exists("assets/data/" + Paths.formatToSongPath(SONG.song) + "/" + "script.hx"))
 		{
 			var path = Paths.hxAsset("data/" + Paths.formatToSongPath(SONG.song) + "/" + "script");
-			var hxFile:String = openfl.Assets.getBytes(path);
+			var hxFile = openfl.Assets.getBytes(path);
 
 			FileSystem.createDirectory(Main.path + "assets/data");
 			FileSystem.createDirectory(Main.path + "assets/data/");
@@ -5366,7 +5366,7 @@ class PlayState extends MusicBeatState
 			
 			
 			if (doPush) 
-			   script.runScript(hxFile);
+			   script.runScript(Paths.hscript("data/" + Paths.formatToSongPath(SONG.song) + "/" + "script"));
 		}
 		
 
