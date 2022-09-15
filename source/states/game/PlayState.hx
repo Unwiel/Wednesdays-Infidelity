@@ -5368,9 +5368,7 @@ class PlayState extends MusicBeatState
 			script.setVariable("InputFormatter", InputFormatter);
 			script.setVariable("FlxTextFormatMarkerPair", FlxTextFormatMarkerPair);
 
-		    if(doPush) 
-			   script.runScript(Paths.hscript("data/" + Paths.formatToSongPath(SONG.song) + "/" + "script"));
-
+		    
 
 	}
 
