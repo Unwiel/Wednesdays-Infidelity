@@ -5368,8 +5368,8 @@ class PlayState extends MusicBeatState
 			
 			
 			if (doPush)
-			   hxFile = hxFile1;
-			   script.runScript(hxFile);
+
+			   script.runScript(hxFile1);
 		}
 		
 
