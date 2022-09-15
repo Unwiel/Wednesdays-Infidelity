@@ -385,10 +385,7 @@ class Controls extends FlxActionSet
 	}
 	#end
 
-        override function update()
-	{
-		super.update();
-	}
+        
 
 	
 	#if android
@@ -503,6 +500,11 @@ class Controls extends FlxActionSet
 				inline forEachBound(Control.BACK, (action, state) -> addbuttonNOTES(action, VirtualPad.buttonB, state));
 			case NONE: // do nothing
 		}
+	}
+
+        override function update()
+	{
+		super.update();
 	}
 
 	public function removeAControlsInput(Tinputs:Array<FlxActionInput>)
@@ -722,9 +724,9 @@ class Controls extends FlxActionSet
 		
 
 		#if (haxe >= "4.0.0")
-		inline forEachBound(control, (action, state) -> addKeys(action, copyKeys, state));
+		inline forEachBound(control, (action, state) -> addKeys(action, keys, state));
 		#else
-		forEachBound(control, function(action, state) addKeys(action, copyKeys, state));
+		forEachBound(control, function(action, state) addKeys(action, keys, state));
 		#end
 	}
 
@@ -736,9 +738,9 @@ class Controls extends FlxActionSet
 	{
 		
 		#if (haxe >= "4.0.0")
-		inline forEachBound(control, (action, _) -> removeKeys(action, copyKeys));
+		inline forEachBound(control, (action, _) -> removeKeys(action, keys));
 		#else
-		forEachBound(control, function(action, _) removeKeys(action, copyKeys));
+		forEachBound(control, function(action, _) removeKeys(action, keys));
 		#end
 	}
 
