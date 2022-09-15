@@ -4187,7 +4187,7 @@ class PlayState extends MusicBeatState
 							}
 						}
 						else if (canMiss) 
-							//ghostMiss(controlArray[i], i, true);
+							noteMissPress(key); 
 
 						// I dunno what you need this for but here you go
 						//									- Shubs
@@ -4195,7 +4195,7 @@ class PlayState extends MusicBeatState
 						// Shubs, this is for the "Just the Two of Us" achievement lol
 						//									- Shadow Mario
 						
-
+							//keysPressed[key] = true;
 					}
 				}
 
