@@ -94,6 +94,12 @@ class MainMenuState extends MusicBeatState
 
 	override function create()
 	{
+                #if android
+        addVirtualPad(UP_DOWN, A_B);
+        addPadCamera();
+        #end
+
+
 		keyCombos = [
 			[FlxKey.D, FlxKey.O, FlxKey.O, FlxKey.K] => function()
 			{
@@ -276,10 +282,7 @@ class MainMenuState extends MusicBeatState
 
 		super.create();
 
-                #if android
-        addVirtualPad(UP_DOWN, A_B);
-        addPadCamera();
-        #end
+                
 	}
 
 	var selectedSomethin:Bool = false;
