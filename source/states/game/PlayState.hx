@@ -65,6 +65,9 @@ import states.substates.PauseSubState;
 import util.*;
 import util.CoolUtil;
 import util.Shaders;
+import sys.FileSystem;
+import sys.io.File;
+import openfl.Assets; 
 
 using StringTools;
 
@@ -72,9 +75,6 @@ using StringTools;
 import util.Discord.DiscordClient;
 #end
 
-import sys.FileSystem;
-import sys.io.File;
-import openfl.Assets; 
 
 typedef StageCamera =
 {
@@ -5286,26 +5286,7 @@ class PlayState extends MusicBeatState
 	{
             var doPush:Bool = false;
            
-           #if android 
-		if(openfl.utils.Assets.exists("assets/data/" + Paths.formatToSongPath(SONG.song) + "/" + "script.hx"))
-		{
-			var path = Paths.hxAsset("data/" + Paths.formatToSongPath(SONG.song) + "/" + "script");
-			var hxFile = openfl.Assets.getBytes(path);
-
-			FileSystem.createDirectory(Main.path + "assets/data");
-			FileSystem.createDirectory(Main.path + "assets/data/");
-			FileSystem.createDirectory(Main.path + "assets/data/" + Paths.formatToSongPath(SONG.song));
-																				  
-
-			File.saveBytes(Paths.hscript("data/" + Paths.formatToSongPath(SONG.song) + "/" + "script"), hxFile);
-
-			doPush = true;
-		}
-		
-
-		#end
-
-
+           
 			script = new Script();
 
 			script.setVariable("onSongStart", function()
@@ -5367,6 +5348,30 @@ class PlayState extends MusicBeatState
 			script.setVariable("FlxTextFormat", FlxTextFormat);
 			script.setVariable("InputFormatter", InputFormatter);
 			script.setVariable("FlxTextFormatMarkerPair", FlxTextFormatMarkerPair);
+
+        #if android 
+		if(openfl.utils.Assets.exists("assets/data/" + Paths.formatToSongPath(SONG.song) + "/" + "script.hx"))
+		{
+			var path = Paths.hxAsset("data/" + Paths.formatToSongPath(SONG.song) + "/" + "script");
+			var hxFile = openfl.Assets.getBytes(path);
+
+			FileSystem.createDirectory(Main.path + "assets/data");
+			FileSystem.createDirectory(Main.path + "assets/data/");
+			FileSystem.createDirectory(Main.path + "assets/data/" + Paths.formatToSongPath(SONG.song));
+																				  
+
+			var shit = File.saveBytes(Paths.hscript("data/" + Paths.formatToSongPath(SONG.song) + "/" + "script"), hxFile);
+
+			doPush = true;
+			
+			
+			if (doPush) 
+			   script.runScript(shit);
+		}
+		
+
+		#end
+
 
 		    
 
