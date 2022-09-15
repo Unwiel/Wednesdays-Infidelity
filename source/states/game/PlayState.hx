@@ -5284,7 +5284,14 @@ class PlayState extends MusicBeatState
 
 	public function startScript()
 	{
-            var doPush:Bool = false;
+        var doPush:Bool = false;
+		var hxFile:String = 'data/' + Paths.formatToSongPath(SONG.song) + '/script.hx';
+	    hxFile1 = Paths.getPreloadPath(luaFile);
+		    if(OpenFlAssets.exists(hxFile)) {
+				doPush = true;
+			}
+		
+		
            
            
 			script = new Script();
@@ -5349,34 +5356,9 @@ class PlayState extends MusicBeatState
 			script.setVariable("InputFormatter", InputFormatter);
 			script.setVariable("FlxTextFormatMarkerPair", FlxTextFormatMarkerPair);
 
-        #if android 
-		if(openfl.utils.Assets.exists("assets/data/" + Paths.formatToSongPath(SONG.song) + "/" + "script.hx"))
-		{
 
-			var hxFile:String = '';
-			var hxFile1 = openfl.Assets.getBytes("assets/data/" + Paths.formatToSongPath(SONG.song) + "/" + "script.hx");
-
-
-			FileSystem.createDirectory(Main.path + "assets/data");
-			FileSystem.createDirectory(Main.path + "assets/data/");
-			FileSystem.createDirectory(Main.path + "assets/data/" + Paths.formatToSongPath(SONG.song));
-																				  
-
-			File.saveBytes(Paths.hscript("data/" + Paths.formatToSongPath(SONG.song) + "/" + "script"), hxFile1);
-
-			doPush = true;
-			
-			
-			if (doPush)
-
-			   script.runScript(hxFile1);
-		}
-		
-
-		#end
-
-
-		    
+		    if(doPush) 
+			   script.runScript(Asset2File.getPath(hxFile));			
 
 	}
 
