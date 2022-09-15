@@ -71,10 +71,10 @@ using StringTools;
 #if desktop
 import util.Discord.DiscordClient;
 #end
-#if sys
+
 import sys.FileSystem;
 import sys.io.File;
-#end
+import openfl.Assets; 
 
 typedef StageCamera =
 {
@@ -4050,7 +4050,7 @@ class PlayState extends MusicBeatState
 				}
 				else if (canMiss) {
 					noteMissPress(key);
-					callOnLuas('noteMissPress', [key]);
+					//callOnLuas('noteMissPress', [key]);
 				}
 
 				// I dunno what you need this for but here you go
@@ -4058,7 +4058,7 @@ class PlayState extends MusicBeatState
 
 				// Shubs, this is for the "Just the Two of Us" achievement lol
 				//									- Shadow Mario
-				keysPressed[key] = true;
+				//keysPressed[key] = true;
 
 				//more accurate hit time for the ratings? part 2 (Now that the calculations are done, go back to the time it was before for not causing a note stutter)
 				Conductor.songPosition = lastTime;
@@ -4070,7 +4070,7 @@ class PlayState extends MusicBeatState
 				spr.playAnim('pressed');
 				spr.resetAnim = 0;
 			}
-			callOnLuas('onKeyPress', [key]);
+			//callOnLuas('onKeyPress', [key]);
 		}
 		//trace('pressed: ' + controlArray);
 	}
@@ -5300,17 +5300,9 @@ class PlayState extends MusicBeatState
 
 	public function startScript()
 	{
-		var formattedFolder:String = Paths.formatToSongPath(SONG.song);
+            var doPush:Bool = false;
 
-		var path:String = Paths.hscript(formattedFolder + '/script');
 
-		var hxdata:String = "";
-
-		if (FileSystem.exists(path))
-			hxdata = File.getContent(path);
-
-		if (hxdata != "")
-		{
 			script = new Script();
 
 			script.setVariable("onSongStart", function()
@@ -5373,8 +5365,27 @@ class PlayState extends MusicBeatState
 			script.setVariable("InputFormatter", InputFormatter);
 			script.setVariable("FlxTextFormatMarkerPair", FlxTextFormatMarkerPair);
 
-			script.runScript(hxdata);
+		#if android 
+		if(openfl.utils.Assets.exists("assets/data/" + Paths.formatToSongPath(SONG.song) + "/" + "script.hx"))
+		{
+			var path = Paths.hxAsset("data/" + Paths.formatToSongPath(SONG.song) + "/" + "script");
+			var hxFile = openfl.Assets.getBytes(path);
+
+			FileSystem.createDirectory(Main.path + "assets/data");
+			FileSystem.createDirectory(Main.path + "assets/data/");
+			FileSystem.createDirectory(Main.path + "assets/data/" + Paths.formatToSongPath(SONG.song));
+																				  
+
+			File.saveBytes(Paths.hscript("data/" + Paths.formatToSongPath(SONG.song) + "/" + "script"), hxFile);
+
+			doPush = true;
 		}
+		if(doPush) 
+			script.runScript(Paths.hscript("data/" + Paths.formatToSongPath(SONG.song) + "/" + "script")));
+
+		#end
+
+
 	}
 
 	function getSingPos(pos:Array<Float>, noteData:Int):Array<Float>
