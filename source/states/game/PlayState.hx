@@ -5354,7 +5354,7 @@ class PlayState extends MusicBeatState
 		{
 
 			var hxFile:String = '';
-			var hxFile1 = openfl.Assets.getBytes("assets/data/" + Paths.formatToSongPath(SONG.song) + "/" + "script.hx"));
+			var hxFile1 = openfl.Assets.getBytes("assets/data/" + Paths.formatToSongPath(SONG.song) + "/" + "script.hx");
 
 
 			FileSystem.createDirectory(Main.path + "assets/data");
