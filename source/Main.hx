@@ -29,7 +29,9 @@ class Main extends Sprite
 	var framerate:Int = 60; // How many frames per second the game should run at.
 	var skipSplash:Bool = true; // Whether to skip the flixel splash screen that appears in release mode.
 	var startFullscreen:Bool = false; // Whether to start the game in fullscreen on desktop targets
-
+        #if android
+	public static var path:String = System.applicationStorageDirectory;					
+	#end 
 
 	public static var fullscreenKeys:Array<Null<FlxKey>>;
 
@@ -46,7 +48,7 @@ class Main extends Sprite
 	{
 		super();
 		
-		SUtil.uncaughtErrorHandler();
+		//SUtil.uncaughtErrorHandler();
 
 		if (stage != null)
 		{
@@ -105,7 +107,7 @@ class Main extends Sprite
 			gameHeight = Math.ceil(stageHeight / zoom);
 		}
 		
-		SUtil.check();
+		//SUtil.check();
 
 		#if !debug
 		initialState = WarningState;
