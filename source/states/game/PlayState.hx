@@ -4087,7 +4087,7 @@ class PlayState extends MusicBeatState
 				spr.playAnim('static');
 				spr.resetAnim = 0;
 			}
-			callOnLuas('onKeyRelease', [key]);
+			//callOnLuas('onKeyRelease', [key]);
 		}
 		//trace('released: ' + controlArray);
 	}
