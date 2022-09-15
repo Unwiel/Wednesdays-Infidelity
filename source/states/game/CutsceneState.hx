@@ -84,7 +84,7 @@ class CutsceneState extends MusicBeatState // PlayState is alreadly laggy enough
 				case 'dook':
 					video = "LIL DROPTOP - DOOK";
 					skippable = false;
-					focus = false;
+					//focus = false;
 				case 'penk':
 					video = "PENKARU GRIDDY";
 					skippable = false;
@@ -110,7 +110,7 @@ class CutsceneState extends MusicBeatState // PlayState is alreadly laggy enough
 	{
 		
 
-			var video = new FlxVideo(fileName, skippable);
+			var video = new FlxVideo(videoName, skippable);
 
 			video.finishCallback = function()
 			{
