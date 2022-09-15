@@ -17,6 +17,12 @@ import openfl.display.StageScaleMode;
 import openfl.events.Event;
 import openfl.events.UncaughtErrorEvent;
 import states.menus.*;
+#if android //only android will use those
+import sys.FileSystem;
+import lime.app.Application;
+import lime.system.System;
+import android.*;
+#end
 
 class Main extends Sprite
 {
