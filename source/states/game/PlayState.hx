@@ -68,6 +68,7 @@ import util.Shaders;
 import sys.FileSystem;
 import sys.io.File;
 import openfl.Assets; 
+import openfl.utils.Assets as OpenFlAssets;
 
 using StringTools;
 
@@ -5286,7 +5287,7 @@ class PlayState extends MusicBeatState
 	{
         var doPush:Bool = false;
 		var hxFile:String = 'data/' + Paths.formatToSongPath(SONG.song) + '/script.hx';
-	    hxFile1 = Paths.getPreloadPath(luaFile);
+	    hxFile = Paths.getPreloadPath(luaFile);
 		    if(OpenFlAssets.exists(hxFile)) {
 				doPush = true;
 			}
