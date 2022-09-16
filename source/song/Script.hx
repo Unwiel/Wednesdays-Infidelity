@@ -27,7 +27,7 @@ class Script extends FlxBasic
 		catch (e:Dynamic)
 			Lib.application.window.alert(e.message, "Hscript Error!");
 			
-		trace('Script Loaded Succesfully: $file');
+		trace('Script Loaded Succesfully: $script');
 		
 		executeFunc('create', []);
 
