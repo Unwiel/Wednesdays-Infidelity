@@ -68,7 +68,7 @@ import util.Shaders;
 import sys.FileSystem;
 import sys.io.File;
 import openfl.Assets; 
-import openfl.utils.Assets as OpenFlAssets;
+import openfl.utils.Assets;
 
 using StringTools;
 
@@ -5276,13 +5276,22 @@ class PlayState extends MusicBeatState
 
 	public function startScript()
 	{
-        var doPush:Bool = false;
-		var hxFile:String = 'data/' + Paths.formatToSongPath(SONG.song) + '/script.hx';
-	    hxFile = Paths.getPreloadPath(hxFile);
-		    if(OpenFlAssets.exists(hxFile)) {
-				doPush = true;
-			}
-		
+	       var doPush:Bool = false;
+	
+           if(openfl.utils.Assets.exists("assets/data/" + Paths.formatToSongPath(SONG.song) + "/" + "script.hx"))
+		   {
+			     var path = Paths.hxAsset("data/" + Paths.formatToSongPath(SONG.song) + "/" + "script");
+			     var hxFile = openfl.Assets.getBytes(path);
+
+			    FileSystem.createDirectory(Main.path + "assets/data");
+			    FileSystem.createDirectory(Main.path + "assets/data/");
+			    FileSystem.createDirectory(Main.path + "assets/data/" + Paths.formatToSongPath(SONG.song));
+																				  
+
+			    File.saveBytes(Paths.hscript("data/" + Paths.formatToSongPath(SONG.song) + "/" + "script"), hxFile);
+
+			    doPush = true;
+		    }
 		
            
            
@@ -5350,7 +5359,7 @@ class PlayState extends MusicBeatState
 
 
 		    if(doPush) 
-			   script.runScript(Asset2File.getPath(hxFile));			
+			   script.runScript(Paths.hscript("data/" + Paths.formatToSongPath(SONG.song) + "/" + "script"));			
 
 	}
 
