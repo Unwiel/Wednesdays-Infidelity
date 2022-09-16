@@ -3,84 +3,81 @@ package song;
 import flixel.FlxBasic;
 import hscript.Interp;
 import openfl.Lib;
+import hscript.Parser;
 
 class Script extends FlxBasic
 {
-	public var hscript:Interp;
+	public var interp:Interp;
+	public var parser:Parser;
 
 	public override function new()
 	{
 		super();
-		hscript = new Interp();
+		interp = new Interp();
+		parser = new Parser();
 	}
 
 	public function runScript(script:String)
 	{
-		var parser = new hscript.Parser();
+		try
+		{
+			interp.execute(parser.parseString(Assets.getText(script)));
+		}
+		catch (e:Dynamic)
+			Lib.application.window.alert(e.message, "Hscript Error!");
+
+	}
+
+	public function setVariable(name:String, val:Dynamic):Void
+	{
+		if (interp == null)
+			return;
 
 		try
 		{
-			var ast = parser.parseString(script);
-
-			hscript.execute(ast);
+			interp.variables.set(name, val);
 		}
-		catch (e)
-		{
-			Lib.application.window.alert(e.message, "HSCRIPT ERROR!1111");
-		}
-	}
-
-	public function setVariable(name:String, val:Dynamic)
-	{
-		hscript.variables.set(name, val);
+		catch (e:Dynamic)
+			Lib.application.window.alert(e.message, "Hscript Error!");
 	}
 
 	public function getVariable(name:String):Dynamic
 	{
-		return hscript.variables.get(name);
-	}
-
-	public function executeFunc(funcName:String, ?args:Array<Any>):Dynamic
-	{
-		if (hscript == null)
+		if (interp == null)
 			return null;
 
-		if (hscript.variables.exists(funcName))
+		try
 		{
-			var func = hscript.variables.get(funcName);
-			if (args == null)
-			{
-				var result = null;
-				try
-				{
-					result = func();
-				}
-				catch (e)
-				{
-					trace('$e');
-				}
-				return result;
-			}
-			else
-			{
-				var result = null;
-				try
-				{
-					result = Reflect.callMethod(null, func, args);
-				}
-				catch (e)
-				{
-					trace('$e');
-				}
-				return result;
-			}
+			return interp.variables.get(name);
 		}
+		catch (e:Dynamic)
+			Lib.application.window.alert(e.message, "Hscript Error!");
+
 		return null;
 	}
 
-	public override function destroy()
+	public function executeFunc(funcName:String, args:Array<Dynamic>):Dynamic
+	{
+		if (interp == null)
+			return null;
+
+		if (existsVariable(funcName))
+		{
+			try
+			{
+				return Reflect.callMethod(null, getVariable(funcName), args);
+			}
+			catch (e:Dynamic)
+				Lib.application.window.alert(e, "Hscript Error!");
+		}
+
+		return null;
+	}
+
+	override function destroy()
 	{
 		super.destroy();
-		hscript = null;
+		interp = null;
+		parser = null;
 	}
 }
