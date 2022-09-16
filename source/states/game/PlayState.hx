@@ -5022,7 +5022,7 @@ class PlayState extends MusicBeatState
 					});
 					
 					
-			}
+			} 
 			
 		}
 
@@ -5052,7 +5052,7 @@ class PlayState extends MusicBeatState
 		}
 		
 		
-	}
+	
 
 		lastStepHit = curStep;
 	}
