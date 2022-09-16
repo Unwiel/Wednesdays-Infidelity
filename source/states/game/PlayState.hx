@@ -1391,10 +1391,9 @@ class PlayState extends MusicBeatState
 		Paths.clearUnusedMemory();
 		CustomFadeTransition.nextCamera = camOther;
 
-		if (script != null)
-		{
-			script.executeFunc("onCreate", []);
-		}
+		
+			script.executeFunc('onCreate', []);
+		
 	}
 
 	function set_songSpeed(value:Float):Float
@@ -1525,10 +1524,9 @@ class PlayState extends MusicBeatState
 		generateStaticArrows(0);
 		generateStaticArrows(1);
 
-		if (script != null)
-		{
-			script.executeFunc("onStartCountdown", []);
-		}
+		
+			script.executeFunc('onStartCountdown', []);
+		
 
 		startedCountdown = true;
 		Conductor.songPosition = 0;
@@ -1864,10 +1862,9 @@ class PlayState extends MusicBeatState
 		FlxTween.tween(timeBar, {alpha: 1}, 0.5, {ease: FlxEase.circOut});
 		FlxTween.tween(timeTxt, {alpha: 1}, 0.5, {ease: FlxEase.circOut});
 
-		if (script != null)
-		{
-			script.executeFunc("onSongStart", []);
-		}
+		
+			script.executeFunc('onSongStart', []);
+		
 
 		#if desktop
 		// Updating Discord Rich Presence (with Time Left)
@@ -2874,10 +2871,9 @@ class PlayState extends MusicBeatState
 			i(elapsed);
 		}
 
-		if (script != null)
-		{
-			script.executeFunc("onUpdate", []);
-		}
+		
+			script.executeFunc('onUpdate', []);
+		
 	}
 
 	function openChartEditor()
@@ -4870,12 +4866,11 @@ class PlayState extends MusicBeatState
 			FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
 			FlxG.stage.removeEventListener(KeyboardEvent.KEY_UP, onKeyRelease);
 		}
-		if (script != null)
-		{
-			script.executeFunc("destroy", []);
+		
+			script.executeFunc('destroy', []);
 
 			script.destroy();
-		}
+		
 
 		instance = null;
 
@@ -4903,11 +4898,10 @@ class PlayState extends MusicBeatState
 			return;
 		}
 
-		if (script != null)
-		{
-			script.setVariable("curStep", curStep);
-			script.executeFunc("onStepHit", []);
-		}
+		
+			script.setVariable('curStep', curStep);
+			script.executeFunc('onStepHit', []);
+		
 
 		if (cameraStageZoom || followChars)
 		{
@@ -5297,31 +5291,31 @@ class PlayState extends MusicBeatState
            
 			script = new Script();
 
-			script.setVariable("onSongStart", function()
+			script.setVariable('onSongStart', function()
 			{
 			});
 
-			script.setVariable("destroy", function()
+			script.setVariable('destroy', function()
 			{
 			});
 
-			script.setVariable("onCreate", function()
+			script.setVariable('onCreate', function()
 			{
 			});
 
-			script.setVariable("onStartCountdown", function()
+			script.setVariable('onStartCountdown', function()
 			{
 			});
 
-			script.setVariable("onStepHit", function()
+			script.setVariable('onStepHit', function()
 			{
 			});
 
-			script.setVariable("onUpdate", function()
+			script.setVariable('onUpdate', function()
 			{
 			});
 
-			script.setVariable("import", function(lib:String, ?as:Null<String>) // Does this even work?
+			script.setVariable('import', function(lib:String, ?as:Null<String>) // Does this even work?
 			{
 				if (lib != null && Type.resolveClass(lib) != null)
 				{
@@ -5329,33 +5323,33 @@ class PlayState extends MusicBeatState
 				}
 			});
 
-			script.setVariable("fromRGB", function(Red:Int, Green:Int, Blue:Int, Alpha:Int = 255)
+			script.setVariable('fromRGB', function(Red:Int, Green:Int, Blue:Int, Alpha:Int = 255)
 			{
 				return FlxColor.fromRGB(Red, Green, Blue, Alpha);
 			});
 
-			script.setVariable("curStep", curStep);
-			script.setVariable("bpm", SONG.bpm);
+			script.setVariable('curStep', curStep);
+			script.setVariable('bpm', SONG.bpm);
 
 			// PRESET CLASSES
-			script.setVariable("PlayState", instance);
-			script.setVariable("FlxTween", FlxTween);
-			script.setVariable("FlxEase", FlxEase);
-			script.setVariable("FlxSprite", FlxSprite);
-			script.setVariable("Math", Math);
-			script.setVariable("FlxG", FlxG);
-			script.setVariable("ClientPrefs", ClientPrefs);
-			script.setVariable("FlxTimer", FlxTimer);
-			script.setVariable("Main", Main);
-			script.setVariable("Event", Event);
-			script.setVariable("Conductor", Conductor);
-			script.setVariable("Std", Std);
-			script.setVariable("FlxTextBorderStyle", FlxTextBorderStyle);
-			script.setVariable("Paths", Paths);
-			script.setVariable("CENTER", FlxTextAlign.CENTER);
-			script.setVariable("FlxTextFormat", FlxTextFormat);
-			script.setVariable("InputFormatter", InputFormatter);
-			script.setVariable("FlxTextFormatMarkerPair", FlxTextFormatMarkerPair);
+			script.setVariable('PlayState', instance);
+			script.setVariable('FlxTween', FlxTween);
+			script.setVariable('FlxEase', FlxEase);
+			script.setVariable('FlxSprite', FlxSprite);
+			script.setVariable('Math', Math);
+			script.setVariable('FlxG', FlxG);
+			script.setVariable('ClientPrefs', ClientPrefs);
+			script.setVariable('FlxTimer', FlxTimer);
+			script.setVariable('Main', Main);
+			script.setVariable('Event', Event);
+			script.setVariable('Conductor', Conductor);
+			script.setVariable('Std', Std);
+			script.setVariable('FlxTextBorderStyle', FlxTextBorderStyle);
+			script.setVariable('Paths', Paths);
+			script.setVariable('CENTER', FlxTextAlign.CENTER);
+			script.setVariable('FlxTextFormat', FlxTextFormat);
+			script.setVariable('InputFormatter', InputFormatter);
+			script.setVariable('FlxTextFormatMarkerPair', FlxTextFormatMarkerPair);
 
 
 		    if(doPush) 
