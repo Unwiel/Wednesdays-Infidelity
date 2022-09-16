@@ -4,6 +4,7 @@ import flixel.FlxBasic;
 import hscript.Interp;
 import openfl.Lib;
 import hscript.Parser;
+import openfl.utils.Assets;
 
 class Script extends FlxBasic
 {
