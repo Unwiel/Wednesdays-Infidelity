@@ -26,6 +26,10 @@ class Script extends FlxBasic
 		}
 		catch (e:Dynamic)
 			Lib.application.window.alert(e.message, "Hscript Error!");
+			
+		trace('Script Loaded Succesfully: $file');
+		
+		executeFunc('create', []);
 
 	}
 
@@ -55,6 +59,21 @@ class Script extends FlxBasic
 			Lib.application.window.alert(e.message, "Hscript Error!");
 
 		return null;
+	}
+	
+	public function existsVariable(name:String):Bool
+	{
+		if (interp == null)
+			return false;
+
+		try
+		{
+			return interp.variables.exists(name);
+		}
+		catch (e:Dynamic)
+			Lib.application.window.alert(e.message, "Hscript Error!");
+
+		return false;
 	}
 
 	public function executeFunc(funcName:String, args:Array<Dynamic>):Dynamic
