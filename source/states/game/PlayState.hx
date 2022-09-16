@@ -1393,7 +1393,7 @@ class PlayState extends MusicBeatState
 
 		if (script != null)
 		{
-			script.executeFunc("onCreate");
+			script.executeFunc("onCreate", []);
 		}
 	}
 
@@ -1527,7 +1527,7 @@ class PlayState extends MusicBeatState
 
 		if (script != null)
 		{
-			script.executeFunc("onStartCountdown");
+			script.executeFunc("onStartCountdown", []);
 		}
 
 		startedCountdown = true;
@@ -1866,7 +1866,7 @@ class PlayState extends MusicBeatState
 
 		if (script != null)
 		{
-			script.executeFunc("onSongStart");
+			script.executeFunc("onSongStart", []);
 		}
 
 		#if desktop
@@ -2876,7 +2876,7 @@ class PlayState extends MusicBeatState
 
 		if (script != null)
 		{
-			script.executeFunc("onUpdate");
+			script.executeFunc("onUpdate", []);
 		}
 	}
 
@@ -4872,7 +4872,7 @@ class PlayState extends MusicBeatState
 		}
 		if (script != null)
 		{
-			script.executeFunc("destroy");
+			script.executeFunc("destroy", []);
 
 			script.destroy();
 		}
@@ -4906,7 +4906,7 @@ class PlayState extends MusicBeatState
 		if (script != null)
 		{
 			script.setVariable("curStep", curStep);
-			script.executeFunc("onStepHit");
+			script.executeFunc("onStepHit", []);
 		}
 
 		if (cameraStageZoom || followChars)
@@ -5020,25 +5020,13 @@ class PlayState extends MusicBeatState
 							countdownGo.destroy();
 						}
 					});
+					
+					
 			}
+			
 		}
 
-		if (curSong == 'Dejection')
-		{
-			switch (curStep)
-			{
-				case 642:
-					FlxTween.tween(camHUD, {alpha: 0}, 0.5);
-
-				case 651:
-					FlxTween.tween(camHUD, {alpha: 1}, 0.5);
-
-				case 1552:
-					FlxTween.tween(camHUD, {alpha: 0}, 3.5);
-					FlxTween.tween(camGame, {alpha: 0}, 3.5);
-					FlxTween.tween(camOther, {alpha: 0}, 3.5);
-			}
-		}
+		
 
 		if (curSong == "Wistfulness" && ClientPrefs.shaders)
 		{
@@ -5062,6 +5050,9 @@ class PlayState extends MusicBeatState
 					distort = null;
 			}
 		}
+		
+		
+	}
 
 		lastStepHit = curStep;
 	}
