@@ -154,7 +154,7 @@ class Paths
 
 	inline static public function hscript(key:String, ?library:String)
 	{
-		return Main.path + getPath('$key.hx', TEXT, library);
+		return getPath('data/$key.hx', TEXT, library);
 	}
 
         inline static public function hxAsset(key:String, ?library:String)
