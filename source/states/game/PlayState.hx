@@ -68,7 +68,7 @@ import util.Shaders;
 import sys.FileSystem;
 import sys.io.File;
 import openfl.Assets; 
-import openfl.utils.Assets;
+import openfl.utils.Assets as OpenFlAssets;
 
 using StringTools;
 
@@ -5268,54 +5268,47 @@ class PlayState extends MusicBeatState
 	var curLight:Int = 0;
 	var curLightEvent:Int = 0;
 
+	
 	public function startScript()
 	{
-	       var doPush:Bool = false;
-	
-           if(openfl.utils.Assets.exists("assets/data/" + Paths.formatToSongPath(SONG.song) + "/" + "script.hx"))
-		   {
-			     var path = Paths.hxAsset("data/" + Paths.formatToSongPath(SONG.song) + "/" + "script");
-			     var hxFile = openfl.Assets.getBytes(path);
+		var formattedFolder:String = Paths.formatToSongPath(SONG.song);
 
-			    FileSystem.createDirectory(Main.path + "assets/data");
-			    FileSystem.createDirectory(Main.path + "assets/data/");
-			    FileSystem.createDirectory(Main.path + "assets/data/" + Paths.formatToSongPath(SONG.song));
-																				  
+		var path:String = Paths.hscript(formattedFolder + '/script');
 
-			    File.saveBytes(Paths.hscript("data/" + Paths.formatToSongPath(SONG.song) + "/" + "script"), hxFile);
+		var hxdata:String = "";
 
-			    doPush = true;
-		    }
-		
-           
-           
+		if (OpenFlAssets.exists(path))
+			hxdata = OpenFlAssets.getText(path);
+
+		if (hxdata != "")
+		{
 			script = new Script();
 
-			script.setVariable('onSongStart', function()
+			script.setVariable("onSongStart", function()
 			{
 			});
 
-			script.setVariable('destroy', function()
+			script.setVariable("destroy", function()
 			{
 			});
 
-			script.setVariable('onCreate', function()
+			script.setVariable("onCreate", function()
 			{
 			});
 
-			script.setVariable('onStartCountdown', function()
+			script.setVariable("onStartCountdown", function()
 			{
 			});
 
-			script.setVariable('onStepHit', function()
+			script.setVariable("onStepHit", function()
 			{
 			});
 
-			script.setVariable('onUpdate', function()
+			script.setVariable("onUpdate", function()
 			{
 			});
 
-			script.setVariable('import', function(lib:String, ?as:Null<String>) // Does this even work?
+			script.setVariable("import", function(lib:String, ?as:Null<String>) // Does this even work?
 			{
 				if (lib != null && Type.resolveClass(lib) != null)
 				{
@@ -5323,38 +5316,36 @@ class PlayState extends MusicBeatState
 				}
 			});
 
-			script.setVariable('fromRGB', function(Red:Int, Green:Int, Blue:Int, Alpha:Int = 255)
+			script.setVariable("fromRGB", function(Red:Int, Green:Int, Blue:Int, Alpha:Int = 255)
 			{
 				return FlxColor.fromRGB(Red, Green, Blue, Alpha);
 			});
 
-			script.setVariable('curStep', curStep);
-			script.setVariable('bpm', SONG.bpm);
+			script.setVariable("curStep", curStep);
+			script.setVariable("bpm", SONG.bpm);
 
 			// PRESET CLASSES
-			script.setVariable('PlayState', instance);
-			script.setVariable('FlxTween', FlxTween);
-			script.setVariable('FlxEase', FlxEase);
-			script.setVariable('FlxSprite', FlxSprite);
-			script.setVariable('Math', Math);
-			script.setVariable('FlxG', FlxG);
-			script.setVariable('ClientPrefs', ClientPrefs);
-			script.setVariable('FlxTimer', FlxTimer);
-			script.setVariable('Main', Main);
-			script.setVariable('Event', Event);
-			script.setVariable('Conductor', Conductor);
-			script.setVariable('Std', Std);
-			script.setVariable('FlxTextBorderStyle', FlxTextBorderStyle);
-			script.setVariable('Paths', Paths);
-			script.setVariable('CENTER', FlxTextAlign.CENTER);
-			script.setVariable('FlxTextFormat', FlxTextFormat);
-			script.setVariable('InputFormatter', InputFormatter);
-			script.setVariable('FlxTextFormatMarkerPair', FlxTextFormatMarkerPair);
+			script.setVariable("PlayState", instance);
+			script.setVariable("FlxTween", FlxTween);
+			script.setVariable("FlxEase", FlxEase);
+			script.setVariable("FlxSprite", FlxSprite);
+			script.setVariable("Math", Math);
+			script.setVariable("FlxG", FlxG);
+			script.setVariable("ClientPrefs", ClientPrefs);
+			script.setVariable("FlxTimer", FlxTimer);
+			script.setVariable("Main", Main);
+			script.setVariable("Event", Event);
+			script.setVariable("Conductor", Conductor);
+			script.setVariable("Std", Std);
+			script.setVariable("FlxTextBorderStyle", FlxTextBorderStyle);
+			script.setVariable("Paths", Paths);
+			script.setVariable("CENTER", FlxTextAlign.CENTER);
+			script.setVariable("FlxTextFormat", FlxTextFormat);
+			script.setVariable("InputFormatter", InputFormatter);
+			script.setVariable("FlxTextFormatMarkerPair", FlxTextFormatMarkerPair);
 
-
-		    if(doPush) 
-			   script.runScript(Paths.hscript("data/" + Paths.formatToSongPath(SONG.song) + "/" + "script"));			
-
+			script.runScript(hxdata);
+		}
 	}
 
 	function getSingPos(pos:Array<Float>, noteData:Int):Array<Float>
