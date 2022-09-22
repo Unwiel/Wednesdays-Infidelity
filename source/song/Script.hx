@@ -3,101 +3,84 @@ package song;
 import flixel.FlxBasic;
 import hscript.Interp;
 import openfl.Lib;
-import hscript.Parser;
-import openfl.utils.Assets;
 
 class Script extends FlxBasic
 {
-	public var interp:Interp;
-	public var parser:Parser;
+	public var hscript:Interp;
 
 	public override function new()
 	{
 		super();
-		interp = new Interp();
-		parser = new Parser();
+		hscript = new Interp();
 	}
 
 	public function runScript(script:String)
 	{
+		var parser = new hscript.Parser();
+
 		try
 		{
-			interp.execute(parser.parseString(Assets.getText(script)));
-		}
-		catch (e:Dynamic)
-			Lib.application.window.alert(e.message, "Hscript Error!");
-			
-		trace('Script Loaded Succesfully: $script');
-		
-		executeFunc('create', []);
+			var ast = parser.parseString(script);
 
+			hscript.execute(ast);
+		}
+		catch (e)
+		{
+			Lib.application.window.alert(e.message, "HSCRIPT ERROR!1111");
+		}
 	}
 
-	public function setVariable(name:String, val:Dynamic):Void
+	public function setVariable(name:String, val:Dynamic)
 	{
-		if (interp == null)
-			return;
-
-		try
-		{
-			interp.variables.set(name, val);
-		}
-		catch (e:Dynamic)
-			Lib.application.window.alert(e.message, "Hscript Error!");
+		hscript.variables.set(name, val);
 	}
 
 	public function getVariable(name:String):Dynamic
 	{
-		if (interp == null)
-			return null;
-
-		try
-		{
-			return interp.variables.get(name);
-		}
-		catch (e:Dynamic)
-			Lib.application.window.alert(e.message, "Hscript Error!");
-
-		return null;
-	}
-	
-	public function existsVariable(name:String):Bool
-	{
-		if (interp == null)
-			return false;
-
-		try
-		{
-			return interp.variables.exists(name);
-		}
-		catch (e:Dynamic)
-			Lib.application.window.alert(e.message, "Hscript Error!");
-
-		return false;
+		return hscript.variables.get(name);
 	}
 
-	public function executeFunc(funcName:String, args:Array<Dynamic>):Dynamic
+	public function executeFunc(funcName:String, ?args:Array<Any>):Dynamic
 	{
-		if (interp == null)
+		if (hscript == null)
 			return null;
 
-		if (existsVariable(funcName))
+		if (hscript.variables.exists(funcName))
 		{
-			try
+			var func = hscript.variables.get(funcName);
+			if (args == null)
 			{
-				return Reflect.callMethod(null, getVariable(funcName), args);
+				var result = null;
+				try
+				{
+					result = func();
+				}
+				catch (e)
+				{
+					trace('$e');
+				}
+				return result;
 			}
-			catch (e:Dynamic)
-				Lib.application.window.alert(e, "Hscript Error!");
+			else
+			{
+				var result = null;
+				try
+				{
+					result = Reflect.callMethod(null, func, args);
+				}
+				catch (e)
+				{
+					trace('$e');
+				}
+				return result;
+			}
 		}
-
 		return null;
 	}
 
-	override function destroy()
+	public override function destroy()
 	{
 		super.destroy();
-		interp = null;
-		parser = null;
+		hscript = null;
 	}
 }
